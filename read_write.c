@@ -3,16 +3,18 @@
 #include <stdlib.h>
 #include <unistd.h>
 pthread_rwlock_t rwlock;
-int data = 0;
+int read_num = 0;
+int write_num = 0;
 void * reader(void * argv)
 {
 	while(1)
 	{
 		pthread_rwlock_rdlock(&rwlock);
-		printf("子进程读到%d\n", data);
+		printf("读的次数为%d\n", ++read_num);
 		pthread_rwlock_unlock(&rwlock);
-		sleep(1);
+		//usleep(1000);
 	}
+	pthread_exit(NULL);
 }
 
 void * writer(void * argv)
@@ -20,20 +22,25 @@ void * writer(void * argv)
 	while(1)
 	{
 		pthread_rwlock_wrlock(&rwlock);
-		data++;
-		printf("父进程写到%d\n", data);
+		//data++;
+		printf("写的次数为%d\n", ++write_num);
 		pthread_rwlock_unlock(&rwlock);
-		sleep(1);
+		//usleep(1000);
 	}
+	pthread_exit(NULL);
 }
 int main()
 {
+	pthread_rwlockattr_t attr;
+	pthread_rwlockattr_init(&attr);
+	pthread_rwlockattr_setkind_np(&attr, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
 	int flag = pthread_rwlock_init(&rwlock, NULL);
 	if(flag != 0)
 	{
 		perror("pthread_rwlock_init");
 		exit(EXIT_FAILURE);
 	}
+
 	pthread_t pid_w1;
 	pthread_create(&pid_w1, NULL, writer, NULL);	
 	pthread_t pid_w2;
