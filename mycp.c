@@ -15,6 +15,7 @@ typedef struct cp_directory
 }Dcp;
 void * pthread_cp_regfile(void * argv)
 {
+	sleep(5);
 	Dcp * dcp = (Dcp *)argv;
 	int fd = open(dcp -> src, O_RDONLY);
 	if(fd == -1)
@@ -40,7 +41,6 @@ void * pthread_cp_regfile(void * argv)
 	close(fd);
 	close(fd1);
 	printf("子线程结束\n");
-	sleep(2);
 	pthread_exit(NULL);
 }
 void * pthread_cp(void * argv)
@@ -67,19 +67,18 @@ void * pthread_cp(void * argv)
 }
 int main(int argc, char * argv[])
 {
-	/*
-	pthread_t * pid_arr[3];
+	
+	/*pthread_t * pid_arr[3];
+	pthread_t pid;
 	for(int i = 2; i < 5; i++)
 	{
 		Dcp * dcp = (Dcp *)malloc(sizeof(Dcp));
 		strncpy(dcp -> src, argv[1], MAX);
 		strncpy(dcp -> dest, argv[i], MAX);
-		pthread_t pid;
 		pid_arr[i - 2] = &pid;
 		pthread_create(&pid, NULL, pthread_cp_regfile, (void *)dcp);
 		//pthread_join(pid, NULL);
 	}
-	
 	for(int i = 0; i < 3; i++)
 	{
 		pthread_join(*(pid_arr[i]), NULL);
@@ -87,7 +86,11 @@ int main(int argc, char * argv[])
 	}*/
 	struct stat st;
 	int flag = stat(argv[2], &st);
-	/* 判断目标文件是否存在并且是文件、路径是否正确*/
+	/* 判断目标文件是否存在并且是文件、路径是否正确
+		①：如果目标目录本身已经存在，则在该目录下则新建一个文件夹
+		② 不存在目标目录，创建目录，如果不能创建，说明路径错误
+		创建了目录，说明创建了文件夹
+	*/
 	if(flag != -1 && !S_ISDIR(st.st_mode))
 	{
 		printf("dest not a directory\n");

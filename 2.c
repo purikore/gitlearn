@@ -28,4 +28,5 @@ int main()
 	{
 		printf("%s\n", sdir -> d_name);
 	}
+	
 }
