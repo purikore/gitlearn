@@ -14,6 +14,6 @@ int main()
 	
 	char * dirc = strdup("/////etc/////fdasdf");
 	char * p = basename(dirc);
-	//printf("%s\n", dirc);
+	printf("%s\n", dirc);
 	printf("%s\n", p);
 }
