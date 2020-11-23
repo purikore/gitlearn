@@ -6,7 +6,7 @@
 #define MAX 2;
 int main()
 {
-	DIR * dir = opendir("test");
+	DIR * dir = opendir(".");
 	if(dir == NULL)
 	{
 		//perror("opendir first");
@@ -22,5 +22,10 @@ int main()
 			perror("opendir second");
 			exit(EXIT_FAILURE);
 		}
+	}
+	struct dirent * sdir;
+	while(sdir = readdir(dir))
+	{
+		printf("%s\n", sdir -> d_name);
 	}
 }
