@@ -4,12 +4,16 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Dcp	mycp.c	/^}Dcp;$/;"	t	typeref:struct:cp_directory	file:
 MAX	2.c	6;"	d	file:
+MAX	mycp.c	10;"	d	file:
 cond	线程/code/cond.c	/^pthread_cond_t cond;\/\/定义一个线程条件变量$/;"	v
+cp_directory	mycp.c	/^typedef struct cp_directory$/;"	s	file:
 data	线程/code/cancel.c	/^int data = 0;;$/;"	v
 data	线程/code/cond.c	/^int data = 0;$/;"	v
 data	线程/code/mutex.c	/^int data = 0;$/;"	v
 data	线程/code/pthreadCreate.c	/^int data = 0;$/;"	v
+dest	mycp.c	/^	char dest[MAX];$/;"	m	struct:cp_directory	file:
 func	1.c	/^void * func(void *argv)$/;"	f
 func	线程/code/cancel.c	/^void * func(void * arg)$/;"	f
 func	线程/code/cond.c	/^void * func(void * arg)$/;"	f
@@ -17,6 +21,8 @@ func	线程/code/mutex.c	/^void * func(void * arg)$/;"	f
 func	线程/code/pthreadCreate.c	/^void * func(void * arg)$/;"	f
 main	1.c	/^int main()$/;"	f
 main	2.c	/^int main()$/;"	f
+main	3.c	/^int main()$/;"	f
+main	4.c	/^int main()$/;"	f
 main	mycp.c	/^int main(int argc, char * argv[])$/;"	f
 main	read_write.c	/^int main()$/;"	f
 main	线程/code/cancel.c	/^int main()$/;"	f
@@ -27,8 +33,10 @@ mutex	线程/code/cond.c	/^pthread_mutex_t mutex;\/\/定义一个线程互斥锁
 mutex	线程/code/mutex.c	/^pthread_mutex_t mutex;\/\/定义一个线程互斥锁$/;"	v
 pmt	1.c	/^pthread_mutex_t pmt;$/;"	v
 pthread_cp	mycp.c	/^void * pthread_cp(void * argv)$/;"	f
+pthread_cp_regfile	mycp.c	/^void * pthread_cp_regfile(void * argv)$/;"	f
 read_num	read_write.c	/^int read_num = 0;$/;"	v
 reader	read_write.c	/^void * reader(void * argv)$/;"	f
 rwlock	read_write.c	/^pthread_rwlock_t rwlock;$/;"	v
+src	mycp.c	/^	char src[MAX];$/;"	m	struct:cp_directory	file:
 write_num	read_write.c	/^int write_num = 0;$/;"	v
 writer	read_write.c	/^void * writer(void * argv)$/;"	f
