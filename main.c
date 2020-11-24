@@ -10,8 +10,8 @@ Pool * pool = NULL;
 int main()
 {
 	Dcp * dcp = (Dcp *)malloc(sizeof(Dcp));
-	strcpy(dcp -> src, "/mnt/d/linux_share/第二阶段/day38线程/线程");
-	strcpy(dcp -> dest, "/mnt/d/linux_share/第二阶段/day38线程/test");
+	strcpy(dcp -> src, "/mnt/d/linux_share/第二阶段/day38线程/mycp.c");
+	strcpy(dcp -> dest, "test");
 	pthread_pool_init(10);
 	
 	enqueue(pool -> queue, pthread_cp, (void *)dcp);

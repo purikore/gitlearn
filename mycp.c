@@ -52,12 +52,8 @@ void * pthread_cp(void * argv)
 	{
 		printf("dest not a directory\n");
 		exit(EXIT_FAILURE);
-	} else if(flag == -1)
+	} else if(flag == -1)  
 	{
-		char * dirc = strdup(dcp -> src);
-		char * p = basename(dirc);
-		strncat(dcp -> dest, "/", 2);
-		strncat(dcp -> dest, p, MAX);
 		flag = mkdir(dcp -> dest, 00777);
 		if(flag == -1)
 		{
@@ -77,6 +73,8 @@ void * pthread_cp(void * argv)
 	char buf_dest[2 * MAX] = "";
 	while(sdir = readdir(dir))
 	{
+		memset(buf_src, '0', MAX);
+		memset(buf_dest, '0', MAX);
 		if(strcmp(sdir -> d_name, ".") == 0 || strcmp(sdir -> d_name, "..") == 0)
 			continue;
 		if(sdir -> d_type == DT_REG)
@@ -87,19 +85,20 @@ void * pthread_cp(void * argv)
 			strncpy(dcp1 -> src, buf_src, MAX);
 			strncpy(dcp1 -> dest, buf_dest, MAX);
 			enqueue(pool -> queue, pthread_cp_regfile, (void *)dcp1);
-			memset(buf_src, '0', MAX);
-			memset(buf_dest, '0', MAX);
 		} else if(sdir -> d_type == DT_DIR)
 		{
 			snprintf(buf_src, 2 * MAX, "%s/%s", dcp -> src, sdir -> d_name);
 			snprintf(buf_dest, 2 * MAX, "%s/%s", dcp -> dest, sdir -> d_name);
 			flag = mkdir(buf_dest, 00777);
+			if(flag == -1)
+			{
+				perror("not create a directory");
+				continue;
+			}
 			Dcp * dcp1 = (Dcp *)malloc(sizeof(Dcp));
 			strncpy(dcp1 -> src, buf_src, MAX);
 			strncpy(dcp1 -> dest, buf_dest, MAX);
 			enqueue(pool -> queue, pthread_cp, (void *)dcp1);
-			memset(buf_src, '0', MAX);
-			memset(buf_dest, '0', MAX);
 		}
 	}
 	free(dcp);
