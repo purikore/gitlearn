@@ -48,7 +48,7 @@ void * pthread_cp(void * argv)
 	*/
 	struct stat st;
 	int flag = stat(dcp -> dest, &st);
-	/*if(flag != -1 && !S_ISDIR(st.st_mode))
+	if(flag != -1 && !S_ISDIR(st.st_mode))
 	{
 		printf("dest not a directory\n");
 		exit(EXIT_FAILURE);
@@ -64,7 +64,7 @@ void * pthread_cp(void * argv)
 			perror("not create a directory");
 			exit(EXIT_FAILURE);
 		}
-	}*/
+	}
 	
 	DIR * dir = opendir(dcp -> src);
 	if(dir == NULL)
