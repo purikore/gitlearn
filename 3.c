@@ -12,7 +12,7 @@ int main()
 {
 	struct stat st;
 	int id = stat("test", &st);
-	//if(id == -1)
+	if(id == -1)
 	{
 		perror("无此文件");
 		int fd = mkdir("test", 00777);
@@ -22,7 +22,7 @@ int main()
 		}
 		return 0;
 	}	
-	if(st.st_mode & S_IFMT == S_IFREG)
+	/*if(st.st_mode & S_IFMT == S_IFREG)
 	{
 		printf("是目录文件\n");
 	}
@@ -31,5 +31,5 @@ int main()
 		printf("时普通文件\n");
 	else
 		printf("非普通文件或目录文件\n");
-	
+	*/
 }

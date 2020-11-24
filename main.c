@@ -3,26 +3,20 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <malloc.h>
+#include <string.h>
 #include "pthread_pool.h"
+#include "mycp.h"
 Pool * pool = NULL;
-void * func(void * argv)
-{
-	sleep(2);
-	printf("输出第%d个数据\n", *(int *)argv);
-	sleep(2);
-}
 int main()
 {
+	Dcp * dcp = (Dcp *)malloc(sizeof(Dcp));
+	strcpy(dcp -> src, "/mnt/d/linux_share/第二阶段/day38线程/线程");
+	strcpy(dcp -> dest, "/mnt/d/linux_share/第二阶段/day38线程/test");
 	pthread_pool_init(10);
-	int * num = (int *)malloc(sizeof(int) * 40);
-	printf("%ld\n", malloc_usable_size(num));
-	for(int i = 0; i < 40; i++)
-	{
-		*(num + i) = i;
-		enqueue(pool -> queue, func, num + i);
-	}
+	
+	enqueue(pool -> queue, pthread_cp, (void *)dcp);
 	pthread_pool_add(5);
 	pthread_pool_destroy();
-	free(num);
+	free(dcp);
 	return 0;
 }
