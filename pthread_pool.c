@@ -5,7 +5,7 @@
 #include "pthread_pool.h"
 extern Pool * pool;
 
-void pthread_pool_init(int max_size)
+void pthread_pool_init(unsigned int max_size)
 {
 	pool = (Pool *)malloc(sizeof(Pool));
 	pthread_mutex_init(&(pool -> pmt), NULL);
@@ -16,18 +16,14 @@ void pthread_pool_init(int max_size)
 	
 	pool -> max_pool_size = max_size;
 	pool -> shutdown = FALSE;
-	int * num = (int *)malloc(sizeof(int) * max_size);
 	for(int i = 0; i < max_size; i++)
 	{
-		*(num + i) = i;
-		pthread_create(pool -> pids + i, NULL, pthread_pool_running, (void *)(num + i));
+		pthread_create(pool -> pids + i, NULL, pthread_pool_running, NULL);
 	}
 }
 
 void * pthread_pool_running(void * argv)
 {
-	int * no = (int *)argv;
-	printf("线程0x%lx编号%d开始运行\n", pthread_self(), *no);
 	while(1)
 	{
 		pthread_mutex_lock(&(pool -> pmt));
@@ -35,14 +31,12 @@ void * pthread_pool_running(void * argv)
 		/*为啥不用if,防止signal全部唤醒的bug*/
 		while(pool -> queue -> wait_task_size == 0 && !(pool -> shutdown))
 		{	
-			printf("线程0x%lx编号%d正在等待\n", pthread_self(), *no);
 			pthread_cond_wait(&(pool -> pct), &(pool -> pmt));
 		}
 		/*必须队列中全部执行完并且shutdown才能关闭线程*/
 		if(pool -> queue -> wait_task_size == 0 && pool -> shutdown)
 		{
 			pthread_mutex_unlock(&(pool -> pmt));
-			printf("线程0x%lx编号%d结束运行\n", pthread_self(), *no);
 			//free(no);
 			pthread_exit(NULL);
 		}
@@ -54,10 +48,8 @@ void * pthread_pool_running(void * argv)
 		pool -> queue -> wait_task_size--;
 		pthread_mutex_unlock(&(pool -> pmt));
 		temp -> next = NULL;
-		printf("线程0x%lx编号%d开始执行任务\n", pthread_self(), *no);
 		//(*(temp -> process))(temp -> argv);
 		temp -> process(temp -> argv);
-		printf("线程0x%lx编号%d结束任务\n", pthread_self(), *no);
 		free(temp);
 	}
 }
@@ -75,4 +67,14 @@ void pthread_pool_destroy()
 	free(pool -> pids);
 	free(pool -> queue);
 	free(pool);
+}
+
+void pthread_pool_add(unsigned int add_size)
+{
+	pool -> max_pool_size += add_size;
+	pool -> pids =(pthread_t *)realloc(pool -> pids, (pool -> max_pool_size) * sizeof(pthread_t));
+	for(int i = pool -> max_pool_size - add_size; i < pool -> max_pool_size; i++)
+	{
+		pthread_create(pool -> pids + i, NULL, pthread_pool_running, NULL);
+	}
 }

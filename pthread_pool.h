@@ -13,12 +13,13 @@ typedef struct pthread_pool
 	pthread_t * pids;
 	Queue * queue;
 	
-	int max_pool_size;
+	unsigned int max_pool_size;
 	boolean shutdown;
 }Pool;
 
-void pthread_pool_init(int);
+void pthread_pool_init(unsigned int);
 void * pthread_pool_running(void *);
 void pthread_pool_destroy();
+void pthread_pool_add(unsigned int);
 
 #endif
